@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "PaperSpriteComponent.h"
 #include "PaperFlipbookComponent.h"
+#include "UFSM.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -30,13 +31,16 @@ public:
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-		UFloatingPawnMovement* p_movementComponent;
+		UCharacterMovementComponent* p_movementComponent;
 	UPROPERTY(VisibleDefaultsOnly)
 		UCameraComponent* p_camera;
 	UPROPERTY(VisibleDefaultsOnly)
-		UPaperSpriteComponent* p_characterVisual;
-	UPROPERTY(VisibleDefaultsOnly)
-		UPaperFlipbookComponent* p_characterAnimatorVisual;
+		UPaperFlipbookComponent* p_characterAnimator;
+	UPROPERTY()
+		UStateMachineComponent* p_stateMachine;
+
+private:
+	float horizontalAxis, verticalAxis;
 
 protected:
 	// Called when the game starts or when spawned
@@ -49,6 +53,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
-	
+private:
+	FName Idle = FName("Idle");
+	FName Run = FName("Run");
+
+public:
+	UFUNCTION()
+		void BindBeginIdle();
+	UFUNCTION()
+		void BindUpdateIdle();
+
+	UFUNCTION()
+		void BindBeginRun();
+	UFUNCTION()
+		void BindUpdateRun();
 };
